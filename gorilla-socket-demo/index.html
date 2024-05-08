@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Test</title>
+    <style>
+        body {
+            background-color: #000000; /* Dark background */
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            color: #00ff00; /* Bright green text */
+            margin: 0;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        #output {
+            background-color: #000000;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            height: 300px;
+            overflow-y: scroll; /* Allows scrolling */
+            white-space: pre-wrap; /* Maintains whitespace formatting */
+        }
+
+        .content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            font-family: 'Courier New', Courier, monospace;
+            color: #00ff00;
+            background-color: #000000;
+            border: 1px solid #00ff00;
+            padding: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #005500; /* Darker green background for the button */
+            color: #00ff00;
+            border: none;
+            padding: 6px 12px;
+            margin-left: 10px;
+            cursor: pointer;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #007700;
+        }
+    </style>
+</head>
+<body>
+    <h1>GoLang WebSocket Test</h1>
+
+    <div class="content">
+        <input type="text" id="input" placeholder="Type your message here...">
+        <button onclick="send()">Send Message</button>
+    </div>
+
+    <pre id="output"></pre>
+</body>
+<script>
+    var input = document.getElementById('input');
+    var output = document.getElementById('output');
+    var socket = new WebSocket("ws://localhost:8080/echo");
+
+    socket.onopen = function() {
+        output.innerHTML += "Status: You are connected.\n";
+    };
+
+
+    socket.onmessage = function(e) {
+        console.log("Received message:", e.data);
+        output.innerHTML += e.data + "\n";
+    };
+
+    function send() {
+        socket.send(input.value);
+        input.value = "";
+    }
+
+    input.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+            send();
+        }
+    });
+</script>
+</html>
+
